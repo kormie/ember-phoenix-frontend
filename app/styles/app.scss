@@ -1,0 +1,18 @@
+@import 'bootstrap';
+
+.messages {
+  height: 100%;     /* full height of the content box */
+  max-height: 20em; /* requires an absolute value for height. */
+  overflow: auto;
+}
+
+.messages {
+  height: 50px;
+  max-height: 20px; /* Will be AT MOST 20px tall : overrides height */
+}
+
+.messages {
+  min-height: 400px; /* overrides height and max-height */
+  height: 200px;
+  max-height: 300px;
+}

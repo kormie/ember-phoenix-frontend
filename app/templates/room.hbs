@@ -1,15 +1,26 @@
-<div class="header">Channel Testing</div>
 <div class="page">
   <div class="content-padded">
-    <ul>
+    <div id="chatbox" class="messages">
       {{#each model as |message|}}
-        <li> {{message.body}} </li>
+        <div class="row">
+          <div class="col-sm-1">
+            {{message.id}}
+          </div>
+          <div class="col-sm-10">
+            {{message.body}}
+          </div>
+          <div class="col-sm-1">
+            {{moment-format message.createdAt "HH:mm:ss"}}
+          </div>
+        </div>
       {{/each}}
-    </ul>
+    </div>
     <div class="form-control">
-      <label>New Message</label>
-      {{input value=newMessage class="form-control"}}
-      <button class="btn" {{action 'sendMessage' newMessage}}>Send Message</button>
+      <fieldset>
+        {{input placeholder="New Message" value=newMessage class="form-control" id="newMessageInput"}}
+      </fieldset>
+      <br/>
+      <button type="submit" class="btn btn-success" {{action 'sendMessage' newMessage}}>Send Message</button>
     </div>
   </div>
 </div>

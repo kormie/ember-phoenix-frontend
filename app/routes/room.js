@@ -5,22 +5,34 @@ export default Ember.Route.extend({
     return this.messages;
   },
   channel: null,
-  messages: [],
+  messages: null,
   init: function() {
     let socket = this.get('phoenix').socket();
     let room = socket.channel("rooms:lobby", {});
-    this.set('messages', this.store.findAll('message'))
+    this.store.findAll('message').then((messages) =>{
+      this.set('messages', messages);
+    });
     this.set('channel', room);
     room.join().receive('ok', (data) => {
-      console.log(data);
+      this.store.unloadAll('message');
+      data.messages.forEach((messageData) => {
+        this.renderMessage(messageData);
+        this.refresh();
+      });
     });
     room.on("new:message", msg => this.renderMessage(msg));
   },
   renderMessage: function(data) {
     let messageData = data.message;
-    let newMessage = this.store.createRecord('message', {
-      id: messageData.id,
-      body: messageData.body
+    let newMessage = this.store.push({
+      data: {
+        id: messageData.id,
+        type: 'message',
+        attributes: {
+          body: messageData.body,
+          createdAt: messageData.createdAt
+        }
+      }
     });
     this.messages.pushObject(newMessage._internalModel);
   },
